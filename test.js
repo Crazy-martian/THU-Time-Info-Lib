@@ -50,6 +50,7 @@ const formatNumber = (value, digits = 2) => (Number.isNaN(value) ? "N/A" : value
 const helper = new InfoHelper();
 
 const stateFile = path.resolve(".thu-info-state.json");
+const credentialsFile = path.resolve(".username_and_password.json");
 
 const loadState = () => {
     try {
@@ -65,6 +66,25 @@ const saveState = (patch) => {
         ...patch,
     };
     fs.writeFileSync(stateFile, JSON.stringify(next, null, 2), "utf8");
+};
+
+const loadCredentials = () => {
+    try {
+        const { username, password } = JSON.parse(fs.readFileSync(credentialsFile, "utf8"));
+
+        if (!username || !password) {
+            throw new Error("Missing username or password");
+        }
+
+        return {
+            userId: username,
+            password,
+        };
+    } catch (error) {
+        throw new Error(
+            `Failed to read ${path.basename(credentialsFile)}. Expected JSON like { \"username\": \"...\", \"password\": \"...\" }. ${error.message}`,
+        );
+    }
 };
 
 const defaultFingerprint = crypto.randomUUID().replace(/-/g, "");
@@ -124,10 +144,7 @@ helper.loginErrorHook = (e) => {
 };
 
 try {
-    await helper.login({
-        userId: "2024012088",
-        password: "huang3110"
-    });
+    await helper.login(loadCredentials());
     saveState({ cookies: { ...network.cookies }, fingerprint: helper.fingerprint });
     console.log("登录成功！");
 
