@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "abort-controller": "^3.0.0",
     "cheerio": "^1.2.0",
