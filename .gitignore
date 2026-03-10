@@ -1,2 +1,4 @@
 node_modules/
 package-lock.json
+.thu-info-state.json
+.username_and_password.json
