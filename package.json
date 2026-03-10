@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "cheerio": "^1.2.0",
+    "cross-fetch": "^4.1.0",
+    "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.19",
+    "he": "^1.2.0",
+    "jsencrypt": "^3.5.4",
+    "sm-crypto": "^0.4.0"
+  }
+}
