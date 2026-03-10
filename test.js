@@ -143,7 +143,30 @@ helper.loginErrorHook = (e) => {
   console.error("loginErrorHook:", e);
 };
 
+const ensureCredentialsFile = async () => {
+    if (fs.existsSync(credentialsFile)) {
+        console.log(`凭据文件 ${path.basename(credentialsFile)} 已存在。`);
+        return;
+    }
+
+    console.log(`凭据文件 ${path.basename(credentialsFile)} 不存在，需要创建。`);
+    console.log('请提供清华信息门户的用户名和密码（信息将保存在本地文件中）');
+    console.log('注意：密码输入将显示为明文。');
+
+    return new Promise((resolve) => {
+        rl.question('学号: ', (username) => {
+            rl.question('密码: ', (password) => {
+                const credentials = { username, password };
+                fs.writeFileSync(credentialsFile, JSON.stringify(credentials, null, 4), 'utf8');
+                console.log(`凭据已保存到 ${path.basename(credentialsFile)}`);
+                resolve();
+            });
+        });
+    });
+};
+
 try {
+    await ensureCredentialsFile();
     await helper.login(loadCredentials());
     saveState({ cookies: { ...network.cookies }, fingerprint: helper.fingerprint });
     console.log("登录成功！");
